@@ -36,14 +36,7 @@ var server = http.createServer(function(req, res) {
     res.end("Hello world\n");
 
     //log the request path
-    console.log(
-      "Request received on path: " +
-        trimmedPath +
-        " With method " +
-        method +
-        " and query string parameters ",
-      queryStringObject
-    );
+    console.log("Request received with the following headers:",headers);
 });
 // start the server and have it listen on port 3000
 server.listen(3000, function ()
