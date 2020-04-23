@@ -1,3 +1,5 @@
+//@ts-check
+
 /*
 create abs export configuration variables
 */

@@ -1,3 +1,5 @@
+//@ts-check
+
 /*
 * primary file for the API
 
@@ -17,22 +19,22 @@ var helpers = require('./lib/helpers');
 // the server should respond to all requests with a string
 //instantiate the http server
 
-httpsServerOptions = {
+var httpsServerOptions = {
     key: fs.readFileSync('./https/key.pem'),
     cert: fs.readFileSync('./https/cert.pem'),
 };
 
-var httpServer = http.createServer(function(req, res) {
+var httpServer = http.createServer(function (req, res) {
     unifiedServer(req, res);
 });
 
 //instantiate the https server
-var httpsServer = https.createServer(httpsServerOptions, function(req, res) {
+var httpsServer = https.createServer(httpsServerOptions, function (req, res) {
     unifiedServer(req, res);
 });
 
 // start the server and have it listen on port 3000
-httpServer.listen(config.httpPort, function() {
+httpServer.listen(config.httpPort, function () {
     console.log(
         'server started on port ' +
             config.httpPort +
@@ -42,7 +44,7 @@ httpServer.listen(config.httpPort, function() {
     );
 });
 
-httpsServer.listen(config.httpsPort, function() {
+httpsServer.listen(config.httpsPort, function () {
     console.log(
         'server started on port ' +
             config.httpsPort +
@@ -53,7 +55,7 @@ httpsServer.listen(config.httpsPort, function() {
 });
 
 //All the server logic for both servers
-var unifiedServer = function(req, res) {
+var unifiedServer = function (req, res) {
     //get the url and pass it
 
     var parsedUrl = url.parse(req.url, true);
@@ -76,11 +78,11 @@ var unifiedServer = function(req, res) {
     var decoder = new StringDecoder('utf-8');
     var buffer = '';
 
-    req.on('data', function(data) {
+    req.on('data', function (data) {
         buffer += decoder.write(data);
     });
 
-    req.on('end', function() {
+    req.on('end', function () {
         buffer += decoder.end();
 
         //Choose the handler this request should go to else choose not found
@@ -99,7 +101,7 @@ var unifiedServer = function(req, res) {
             payload: helpers.parseJsonToObject(buffer),
         };
         //route the request to the handler specified in the router
-        chosenHandler(data, function(statusCode, payload) {
+        chosenHandler(data, function (statusCode, payload) {
             //use the status code calledBack by the handler or default to 200
             statusCode = typeof statusCode == 'number' ? statusCode : 200;
 
@@ -126,4 +128,5 @@ var unifiedServer = function(req, res) {
 var router = {
     ping: handlers.ping,
     users: handlers.users,
+    tokens: handlers.tokens,
 };
